@@ -1,0 +1,40 @@
+﻿@using queue_management.Models
+@model queue_management.Models.Country
+
+@{
+    ViewData["Title"] = "Detalles del País";
+}
+
+<h1>Detalle del País </h1>
+<h3>Id.: @Model.CountryID - @Model.CountryName </h3>
+<hr />
+
+<form asp-controller="Countries" asp-action="Details" method="get">
+
+    <!-- Definir el id que se envía desde la vista al controlador -->
+    <input type="hidden" asp-for="CountryID" value="@Model.CountryID" class="Country" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!--- Para Nombre del Rol   -->
+    <div class="mb-3 form-group">
+        <label asp-for="CountryName" class="form-label">@Html.DisplayNameFor(model => model.CountryName)</label>
+        <input type="text" asp-for="CountryName" class="form-control" readonly />
+        <span asp-validation-for="CountryName" class="text-danger"></span>
+    </div>
+
+    <div>
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.CountryID">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <a class="btn btn-secondary" asp-action="Index">
+            <i class="bi bi-x-square"></i> Cancelar
+        </a>
+    </div>
+
+</form>
+
+<!-- @Html.DisplayNameFor(model => model.CountryName) -->
+<!-- @Html.DisplayFor(model => model.CountryName) -->
+            
+            
+

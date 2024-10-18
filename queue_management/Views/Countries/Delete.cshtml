@@ -1,0 +1,36 @@
+﻿@using queue_management.Models
+@model queue_management.Models.Country
+
+@{
+    ViewData["Title"] = "Borrar País";
+}
+
+<h1>Borrar País</h1>
+<h3>Id.: @Model.CountryID - @Model.CountryName </h3>
+<h3>¿Estás seguro de que deseas borrar este País?</h3>
+<hr />
+
+<form asp-controller="Countries" asp-action="Delete" method="post">
+
+    <!-- Definir el id que se envía desde la vista al controlador -->
+    <input type="hidden" asp-for="CountryID" value="@Model.CountryID" class="Country" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!--- Para Nombre del Rol   -->
+    <div class="mb-3 form-group">
+        <label asp-for="CountryName" class="form-label"> @Html.DisplayNameFor(model => model.CountryName)</label>
+        <input type="text" asp-for="CountryName" class="form-control" readonly />
+        <span asp-validation-for="CountryName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <!---------------  Botones summit y cancelar  ------------->
+        <hr />
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-check-square"></i> Borrar
+        </button>
+        <a class="btn btn-secondary" asp-action="Index">
+            <i class="bi bi-x-square"></i> Cancelar
+        </a>
+    </div>
+</form>
