@@ -12,16 +12,18 @@ namespace queue_management.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo Nombre de Departamento es obligatorio.")]
         [StringLength(100)]
         [Display(Name = "Nombre del Departamento")]
         public string? DepartmentName { get; set; }
 
         // Definición de Relaciones & propiedad de navegacion  
         // --------------------------------------------
+        [Required(ErrorMessage = "El campo País es obligatorio")]
         [ForeignKey("Country")]
         public int CountryID { get; set; }
-        [Display(Name = "País")]
+
+        [Display(Name = "Nombre del País")]
         public virtual Country? Country { get; set; }
 
         public virtual ICollection<Region> Regions { get; set; } = new List<Region>();

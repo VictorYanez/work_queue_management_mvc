@@ -1,0 +1,133 @@
+﻿@using queue_management.Models
+@model queue_management.Models.City
+
+@{
+    ViewData["Title"] = "Crear Ciudades";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+    <h1>Crear Ciudad</h1>
+    <hr />
+    <h4>Crear una Ciudad de un Municipio</h4>
+    <hr />
+
+    <div class="mb-3 form-group">
+        <form asp-action="Create" asp-controller="Cities" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RowVersion" />
+
+            <!--- Para Lista de Pais   -->
+            <div class="mb-3 form-group">
+                <label asp-for="CountryID" class="form-label">@Html.DisplayNameFor(model => model.Country)</label>
+                <select id="CountryID" class="form-select form-select sm" asp-for="CountryID" asp-items="ViewBag.CountryID">
+                    <option value=""> --- Seleccionar País --- </option>
+                </select>
+                <span asp-validation-for="CountryID" class="text-danger"></span>
+            </div>
+
+            <!--- Para Lista de Departamento   -->
+            <div class="mb-3 form-group">
+                <label asp-for="DepartmentID" class="form-label">@Html.DisplayNameFor(model => model.Department)</label>
+                <select id="DepartmentID" class="form-select form-select sm" asp-for="DepartmentID" asp-items="ViewBag.DepartmentID">
+                    <option value=""> --- Seleccionar Departamento --- </option>
+                </select>
+                <span asp-validation-for="DepartmentID" class="text-danger"></span>
+            </div>
+
+            <!--- Para Lista de Región   -->
+            <div class="mb-3 form-group">
+                <label asp-for="RegionID" class="form-label">@Html.DisplayNameFor(model => model.Region)</label>
+                <select id="RegionID" class="form-select form-select sm" asp-for="RegionID" asp-items="ViewBag.RegionID">
+                    <option value=""> --- Seleccionar Región --- </option>
+                </select>
+                <span asp-validation-for="RegionID" class="text-danger"></span>
+            </div>
+
+            <!--- Para Lista de Municipio   -->
+            <div class="mb-3 form-group">
+                <label asp-for="MunicipalityID" class="form-label">@Html.DisplayNameFor(model => model.Municipality)</label>
+                <select id="MunicipalityID" class="form-select form-select sm" asp-for="MunicipalityID" asp-items="ViewBag.MunicipalityID">
+                    <option value=""> --- Seleccionar Municipio --- </option>
+                </select>
+                <span asp-validation-for="MunicipalityID" class="text-danger"></span>
+            </div>
+            <!---  Para los campos propios de Departamento  -->
+            <div class="form-group">
+                <label asp-for="CityName" class="control-label"></label>
+                <input asp-for="CityName" class="form-control" />
+                <span asp-validation-for="CityName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <!---------------  Botones summit y cancelar  ------------->
+                <hr />
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check-square"></i> Aplicar</button>
+                <a class="btn btn-secondary" asp-action="Index"><i class="bi bi-x-square"></i> Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+      // Para llenados de los listados de las Entidades padres de Ciudad
+    <!----------   Cargar jQuery primero   --------------->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Función para cargar Departamentos al seleccionar País
+            $("#CountryID").change(function () {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.get('@Url.Action("GetDepartments", "Cities")', { countryId: countryId }, function (data) {
+                        var departmentDropdown = $('#DepartmentID');
+                        departmentDropdown.empty().append('<option value="">--- Seleccionar Departamento ---</option>');
+                        $.each(data, function (index, item) {
+                            departmentDropdown.append(new Option(item.name, item.id));
+                        });
+                        $('#RegionID').empty().append('<option value="">--- Seleccionar Región ---</option>');
+                        $('#MunicipalityID').empty().append('<option value="">--- Seleccionar Municipio ---</option>');
+                    });
+                }
+            });
+
+            // Función para cargar Regiones al seleccionar Departamento
+            $("#DepartmentID").change(function () {
+                var departmentId = $(this).val();
+                if (departmentId) {
+                    $.get('@Url.Action("GetRegions", "Cities")', { departmentId: departmentId }, function (data) {
+                        var regionDropdown = $('#RegionID');
+                        regionDropdown.empty().append('<option value="">--- Seleccionar Región ---</option>');
+                        $.each(data, function (index, item) {
+                            regionDropdown.append(new Option(item.name, item.id));
+                        });
+                        $('#MunicipalityID').empty().append('<option value="">--- Seleccionar Municipio ---</option>');
+                    });
+                }
+            });
+
+            // Función para cargar Municipios al seleccionar Región
+            $("#RegionID").change(function () {
+                var regionId = $(this).val();
+                if (regionId) {
+                    $.get('@Url.Action("GetMunicipalities", "Cities")', { regionId: regionId }, function (data) {
+                        var municipalityDropdown = $('#MunicipalityID');
+                        municipalityDropdown.empty().append('<option value="">--- Seleccionar Municipio ---</option>');
+                        $.each(data, function (index, item) {
+                            municipalityDropdown.append(new Option(item.name, item.id));
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+}

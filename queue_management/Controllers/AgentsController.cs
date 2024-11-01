@@ -54,7 +54,7 @@ namespace queue_management.Controllers
 
         // POST: Agents/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AgentID,DUI,FirstName,LastName,Email,PhoneNumber,RoleID,LocationID,Department,Unit,Position,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,RowVersion")] Agent agent)
@@ -88,7 +88,7 @@ namespace queue_management.Controllers
 
         // POST: Agents/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AgentID,DUI,FirstName,LastName,Email,PhoneNumber,RoleID,LocationID,Department,Unit,Position,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,RowVersion")] Agent agent)

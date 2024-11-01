@@ -12,28 +12,37 @@ namespace queue_management.Models
         [Display(Name = "Id del Municipio")]
         public int MunicipalityID { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        [Display(Name = "Nombre del Municipio")]
-        public string? MunicipalityName { get; set; }
-
-
         // Definición de Relaciones & propiedad de navegacion  
         // --------------------------------------------
         [ForeignKey("Countries")]
-        [Display(Name = "Nombre del País")]
+        [Display(Name = "Id. del País")]
+        [Required(ErrorMessage = "El campo país es obligatorio")]
         public int CountryID { get; set; }
+
+        [Display(Name = "Nombre del País")]
         public virtual Country? Country { get; set; }
 
         [ForeignKey("Departments")]
-        [Display(Name = "Nombre del Departamento")]
+        [Display(Name = "Id. del Departamento")]
+        [Required(ErrorMessage = "El campo Departamento es obligatorio")]
         public int DepartmentID { get; set; }
+
+        [Display(Name = "Nombre del Departamento")]
         public virtual Department? Department { get; set; }
 
         [ForeignKey("Regions")]
-        [Display(Name = "Nombre del Departamento")]
+        [Display(Name = "Nombre del Región")]
+        [Required(ErrorMessage = "El campo región es obligatorio")]
         public int RegionID { get; set; }
+
+        [Display(Name = "Nombre de la Región")]
         public virtual Region? Region { get; set; }
+
+        // Campos especidificos del Municipio   
+        [StringLength(100)]
+        [Display(Name = "Nombre del Municipio")]
+        [Required(ErrorMessage = "El campo Nombre del Municipio es obligatorio")]
+        public string? MunicipalityName { get; set; }
 
         public ICollection<City> Cities { get; set; } = new List<City>();
 

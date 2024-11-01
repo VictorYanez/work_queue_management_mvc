@@ -78,13 +78,6 @@ namespace queue_management.Data
                 .HasForeignKey(ap => ap.ServiceID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relación City -> Location
-            modelBuilder.Entity<Location>()
-                .HasOne(lo => lo.City)
-                .WithMany(ci => ci.Locations)
-                .HasForeignKey(lo => lo.CityID)
-                .OnDelete(DeleteBehavior.Restrict);
-
             // Relación Comment -> Ticket
             modelBuilder.Entity<Comment>()
                 .HasOne(cm => cm.Ticket)
@@ -111,19 +104,6 @@ namespace queue_management.Data
                 .HasOne(se => se.Location)
                 .WithMany(lo => lo.Services)
                 .HasForeignKey(se => se.LocationID)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Location>()
-              //  .HasMany(lo => lo.Services)
-              //  .WithOne(se => se.Location)
-              //  .HasForeignKey(se => se.LocationID)
-              //  .OnDelete(DeleteBehavior.Restrict);
-
-            // Relación Municipality -> City
-            modelBuilder.Entity<City>()
-                .HasOne(ci => ci.Municipality)
-                .WithMany(mu => mu.Cities)
-                .HasForeignKey(ci => ci.MunicipalityID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación Queue -> QueueAssignment
@@ -162,11 +142,73 @@ namespace queue_management.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             //modelBuilder.Entity<Service>()
-              //  .HasMany(se => se.Ratings)
-              //  .WithOne(ra => ra.Service)
-              //  .HasForeignKey(ra => ra.ServiceID)
-              //  .OnDelete(DeleteBehavior.Restrict);
+            //  .HasMany(se => se.Ratings)
+            //  .WithOne(ra => ra.Service)
+            //  .HasForeignKey(ra => ra.ServiceID)
+            //  .OnDelete(DeleteBehavior.Restrict);
 
+            // Configuración de la relación City - Country
+            modelBuilder.Entity<City>()
+                .HasOne(c => c.Country)
+                .WithMany()
+                .HasForeignKey(c => c.CountryID)
+                .OnDelete(DeleteBehavior.Restrict); // Restringe la eliminación en cascada
+
+            // Configuración de la relación City - Department
+            modelBuilder.Entity<City>()
+                .HasOne(c => c.Department)
+                .WithMany()
+                .HasForeignKey(c => c.DepartmentID)
+                .OnDelete(DeleteBehavior.Restrict); // Restringe la eliminación en cascada
+
+            // Configuración de la relación City - Region
+            modelBuilder.Entity<City>()
+                .HasOne(c => c.Region)
+                .WithMany()  
+                .HasForeignKey(c => c.RegionID)
+                .OnDelete(DeleteBehavior.Restrict); // Cambia el comportamiento de cascada por Restrict
+
+            // Relación Country -> Location  
+            modelBuilder.Entity<Location>()
+                  .HasOne(l => l.Country)
+                  .WithMany()
+                  .HasForeignKey(l => l.CountryID)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación Department -> Location  
+            modelBuilder.Entity<Location>()
+                  .HasOne(l => l.Department)
+                  .WithMany()
+                  .HasForeignKey(l => l.DepartmentID)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación Region -> Location  
+            modelBuilder.Entity<Location>()
+                .HasOne(l => l.Region)
+                .WithMany()
+                .HasForeignKey(l => l.RegionID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación Municipality -> Location  
+            modelBuilder.Entity<Location>()
+                .HasOne(l => l.Municipality)
+                .WithMany()
+                .HasForeignKey(l => l.MunicipalityID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configuración de la relación City - Municipality
+            modelBuilder.Entity<City>()
+                .HasOne(c => c.Municipality)
+                .WithMany(m => m.Cities)
+                .HasForeignKey(c => c.MunicipalityID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación City -> Location
+            modelBuilder.Entity<Location>()
+                .HasOne(lo => lo.City)
+                .WithMany(ci => ci.Locations)
+                .HasForeignKey(lo => lo.CityID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Relación Service -> ServiceWindow
             modelBuilder.Entity<ServiceWindow>()
@@ -203,10 +245,8 @@ namespace queue_management.Data
             //    .WithOne(u => u.Rol)
             //    .HasForeignKey(u => u.RoleId);
 
-
             // Definición de Claves primarias con Identity
             //--------------------------------------------
-
             modelBuilder.Entity<Agent>()
                 .Property(ag => ag.AgentID)
                 .ValueGeneratedOnAdd();

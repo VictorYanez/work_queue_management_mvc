@@ -9,15 +9,18 @@
 <h1>Editar País</h1>
 <h3>Id.: @Model.CountryID - @Model.CountryName </h3>
 <hr />
-<div class="row">
+<h4>Desea editar este país?</h4>
+<hr />
+
     <div class="col-md-4">
-        <!-- Definir el id que se envía desde la vista al controlador -->
-        <input type="hidden" asp-for="CountryID" value="@Model.CountryID" class="Country" />
         <form asp-action="Edit" asp-controller="Countries" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!-- Definir el id que se envía desde la vista al controlador -->
+        <input type="hidden" asp-for="CountryID" class="Country" />
+        <input type="hidden" asp-for="RowVersion" />
            
             <div class="form-group mb3">
-                <label asp-for="CountryName" class="control-label" type="text"></label>
+            <label asp-for="CountryName" class="control-label" type="text">@Html.DisplayNameFor(model => model.CountryName)</label>
                 <input asp-for="CountryName" class="form-control" placeholder="Ingresa la descripción del Rol" type="text" />
                 <span asp-validation-for="CountryName" class="text-danger"></span>
             </div>
@@ -29,29 +32,6 @@
             </div>
         </form>
     </div>
-</div>
-
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CountryID" />
-            <div class="form-group">
-                <label asp-for="CountryName" class="control-label"></label>
-                <input asp-for="CountryName" class="form-control" />
-                <span asp-validation-for="CountryName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

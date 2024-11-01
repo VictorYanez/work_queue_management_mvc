@@ -17,7 +17,7 @@ namespace queue_management.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -170,10 +170,16 @@ namespace queue_management.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("CountryID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedAt")
@@ -185,6 +191,9 @@ namespace queue_management.Migrations
                     b.Property<int>("MunicipalityID")
                         .HasColumnType("int");
 
+                    b.Property<int>("RegionID")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -192,7 +201,13 @@ namespace queue_management.Migrations
 
                     b.HasKey("CityID");
 
+                    b.HasIndex("CountryID");
+
+                    b.HasIndex("DepartmentID");
+
                     b.HasIndex("MunicipalityID");
+
+                    b.HasIndex("RegionID");
 
                     b.ToTable("Cities", (string)null);
                 });
@@ -333,16 +348,11 @@ namespace queue_management.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationID"));
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<int>("CityID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("CountryID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -350,9 +360,8 @@ namespace queue_management.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("Department")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("DepartmentID")
+                        .HasColumnType("int");
 
                     b.Property<string>("LocationName")
                         .IsRequired()
@@ -365,17 +374,16 @@ namespace queue_management.Migrations
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("Municipality")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("MunicipalityID")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Region")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("RegionID")
+                        .HasColumnType("int");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -385,6 +393,14 @@ namespace queue_management.Migrations
                     b.HasKey("LocationID");
 
                     b.HasIndex("CityID");
+
+                    b.HasIndex("CountryID");
+
+                    b.HasIndex("DepartmentID");
+
+                    b.HasIndex("MunicipalityID");
+
+                    b.HasIndex("RegionID");
 
                     b.ToTable("Locations", (string)null);
                 });
@@ -1074,13 +1090,37 @@ namespace queue_management.Migrations
 
             modelBuilder.Entity("queue_management.Models.City", b =>
                 {
+                    b.HasOne("queue_management.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("queue_management.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("queue_management.Models.Municipality", "Municipality")
                         .WithMany("Cities")
                         .HasForeignKey("MunicipalityID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("queue_management.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+
+                    b.Navigation("Department");
+
                     b.Navigation("Municipality");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("queue_management.Models.Comment", b =>
@@ -1121,7 +1161,39 @@ namespace queue_management.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("queue_management.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("queue_management.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("queue_management.Models.Municipality", "Municipality")
+                        .WithMany()
+                        .HasForeignKey("MunicipalityID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("queue_management.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("City");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Municipality");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("queue_management.Models.Municipality", b =>

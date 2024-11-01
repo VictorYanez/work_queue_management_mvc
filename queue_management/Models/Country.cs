@@ -11,8 +11,8 @@ namespace queue_management.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CountryID { get; set; }
 
-        [Required]
         [StringLength(100)]
+        [Required(ErrorMessage = "El campo Nombre de País es obligatorio")]
         [Display(Name = "Nombre del País")]
         public string? CountryName { get; set; }
 

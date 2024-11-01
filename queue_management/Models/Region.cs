@@ -12,20 +12,27 @@ namespace queue_management.Models
         [Display(Name = "Id de la Región")]
         public int RegionID { get; set; }
 
-        [Required]
         [StringLength(100)]
+        [Required(ErrorMessage = "El campo Nombre de Región es obligatorio.")]
         [Display(Name = "Nombre de la Región")]
         public string? RegionName { get; set; }
 
         // Definición de Relaciones & propiedad de navegacion 
         // --------------------------------------------
         [ForeignKey("Country")]
+        [Required(ErrorMessage = "El código del país es obligatorio")]
+        [Display(Name = "Codigo de país")]
         public int CountryID { get; set; }
+
+        [Display(Name = "País")]
         public virtual Country? Country { get; set; }
 
         [ForeignKey("Department")]
-        [Display(Name = "Departamentos")]
+        [Display(Name = "Código del Departamento")]
+        [Required(ErrorMessage = "El código del Departamento es obligatorio")]
         public int DepartmentID { get; set; }
+
+        [Display(Name = "Departamentos")]
         public virtual Department? Department { get; set; }
         public virtual ICollection<Municipality> Municipalities { get; set; } = new List<Municipality>();
 

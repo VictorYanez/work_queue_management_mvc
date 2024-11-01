@@ -54,7 +54,7 @@ namespace queue_management.Controllers
 
         // POST: Ratings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RatingID,DateTime,RatingValue,Observations,UserID,ServiceID,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,RowVersion")] Rating rating)
@@ -88,7 +88,7 @@ namespace queue_management.Controllers
 
         // POST: Ratings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RatingID,DateTime,RatingValue,Observations,UserID,ServiceID,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,RowVersion")] Rating rating)

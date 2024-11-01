@@ -8,37 +8,50 @@ namespace queue_management.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required(ErrorMessage = "El campo id es obligatorio")]
         [Display(Name = "Id de la Ciudad")]
         public int CityID { get; set; }
 
-        [Required]
         [StringLength(100)]
+        [Required(ErrorMessage = "El campo Nombre de Ciudad es obligatorio")]
         [Display(Name = "Nombre de la Ciudad")]
         public string? CityName { get; set; }
 
         // Definición de Relaciones & propiedad de navegacion  
         // --------------------------------------------
-        //[ForeignKey("CountryId")]
-        //[Display(Name = "Nombre del País")]
-        //public int CountryID { get; set; }
-        //public virtual Country? Country { get; set; }
+        [ForeignKey("CountryID")]
+        [Required(ErrorMessage = "El campo País es obligatorio")]
+        [Display(Name = "Id del País")]
+        public int CountryID { get; set; }
 
-        //[ForeignKey("DepartmentId")]
-        //[Display(Name = "Nombre del Departamento")]
-        //public int DepartmentID { get; set; }
-        //public virtual Department? Department { get; set; }
+        [Display(Name = "Nombre del País")]
+        public virtual Country Country { get; set; } = null!;
 
-        //[ForeignKey("RegionId")]
-        //[Display(Name = "Nombre de la Región")]
-        //public int RegionID { get; set; }
-        //public virtual Region? Regions { get; set; }
+        [ForeignKey("DepartmentID")]
+        [Required(ErrorMessage = "El campo Departamento es obligatorio")]
+        [Display(Name = "Id del Departamento")]
+        public int DepartmentID { get; set; }
 
-        [ForeignKey("MunicipalityId")]
+        [Display(Name = "Nombre del Departamento")]
+        public virtual Department Department { get; set; } = null!;
+
+        [ForeignKey("RegionID")]
+        [Required(ErrorMessage = "El campo Region es obligatorio")]
+        [Display(Name = "Id de la Región")]
+        public int RegionID { get; set; }
+
+        [Display(Name = "Nombre de la Región")]
+        public virtual Region Region { get; set; } = null!;
+
+        [ForeignKey("MunicipalityID")]
+        [Required(ErrorMessage = "El campo municipio es obligatorio")]
+        [Display(Name = "Id de Municipio")]
+        public int MunicipalityID { get; set; } 
+
         [Display(Name = "Nombre de Municipio")]
-        public int MunicipalityID { get; set; }
-        public virtual Municipality? Municipality { get; set; }
+        public virtual Municipality Municipality { get; set; } = null!;
 
-        [Display(Name = "Sucursales")]
+        [Display(Name = "Locales")]
         public ICollection<Location> Locations { get; set; } = new List<Location>();
 
         // Campos de Auditoría

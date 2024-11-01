@@ -20,6 +20,7 @@ namespace queue_management.Controllers
         }
 
         // GET: Countries
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             try
@@ -50,7 +51,8 @@ namespace queue_management.Controllers
             return View(new List<Country>());
         }
 
-        // GET: Countries/Details/5
+        // GET: Countries/Details
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -75,8 +77,6 @@ namespace queue_management.Controllers
         }
 
         // POST: Countries/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CountryID,CountryName")] Country country)
@@ -90,7 +90,8 @@ namespace queue_management.Controllers
             return View(country);
         }
 
-        // GET: Countries/Edit/5
+        // GET: Countries/Edit
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,42 +107,33 @@ namespace queue_management.Controllers
             return View(country);
         }
 
-        // POST: Countries/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Countries/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CountryID,CountryName")] Country country)
+        public async Task<IActionResult> Edit(int id, [Bind("CountryID,CountryName,RowVersion")] Country country)
         {
             if (id != country.CountryID)
             {
                 return NotFound();
             }
 
+            if (!CountryExists(id))
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(country);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CountryExists(country.CountryID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(country);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(country);
         }
 
-        // GET: Countries/Delete/5
+        // GET: Countries/Delete
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -174,9 +166,12 @@ namespace queue_management.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Definición de Funciones Misceláneas 
         private bool CountryExists(int id)
         {
             return _context.Countries.Any(e => e.CountryID == id);
         }
+
+        // Manejo de vistas de Excepciones 
     }
 }
