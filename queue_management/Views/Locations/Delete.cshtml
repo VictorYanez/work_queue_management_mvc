@@ -2,7 +2,11 @@
 @model queue_management.Models.Location
 
 @{
-    ViewData["Title"] = "Borrar Local"; 
+    if (ViewData != null)
+    {
+        ViewData["Title"] = "Editar Local";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
 
 <!DOCTYPE html>
@@ -14,7 +18,7 @@
 </head>
 
 <body>
-    <h1>Borrar Local</h1>
+    <h1>Borrar Local </h1>
     <h3>
         Id.: @Model.LocationID - @(Model.Country?.CountryName ?? "N/A") - @(Model.Department?.DepartmentName ?? "N/A") -
         @(Model.Region?.RegionName ?? "N/A") - @Model.Municipality.MunicipalityName - @Model.City.CityName
