@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using queue_management.Models;
 
 namespace queue_management.Data
@@ -11,6 +12,7 @@ namespace queue_management.Data
         // Definición de Modelos del Sistema
         public DbSet<Agent> Agents { get; set; } = default!;
         public DbSet<Appointment> Appointments { get; set; } = default!;
+        public DbSet<Area> Areas { get; set; } = default!;
         public DbSet<City> Cities { get; set; } = default!;
         public DbSet<Comment> Comments { get; set; } = default!;
         public DbSet<Country> Countries { get; set; } = default!;
@@ -30,6 +32,7 @@ namespace queue_management.Data
         public DbSet<Ticket> Tickets { get; set; } = default!;
         public DbSet<TicketStatus> TicketStatus { get; set; } = default!;
         public DbSet<TicketStatusAssignment> TicketStatusAssignments { get; set; } = default!;
+        public DbSet<Unit> Units { get; set; } = default!;
 
         // Resolución de relaciones de Identity
         // API Fluente
@@ -40,6 +43,7 @@ namespace queue_management.Data
             // Configurar reiterar los nombres de tablas pluralizadas
             modelBuilder.Entity<Agent>().ToTable("Agents");
             modelBuilder.Entity<Appointment>().ToTable("Appointments");
+            modelBuilder.Entity<Area>().ToTable("Areas");
             modelBuilder.Entity<City>().ToTable("Cities");
             modelBuilder.Entity<Comment>().ToTable("Comments");
             modelBuilder.Entity<Country>().ToTable("Countries");
@@ -59,6 +63,7 @@ namespace queue_management.Data
             modelBuilder.Entity<Ticket>().ToTable("Tickets");
             modelBuilder.Entity<TicketStatus>().ToTable("TicketStatus");
             modelBuilder.Entity<TicketStatusAssignment>().ToTable("TicketStatusAssignments");
+            modelBuilder.Entity<Unit>().ToTable("Units");
 
             // Sección de Detalle de Relaciones
             // Relaciones con eliminaciones restringidas para evitar ciclos
@@ -76,6 +81,13 @@ namespace queue_management.Data
                 .HasOne(ap => ap.Service)
                 .WithMany(se => se.Appointments)
                 .HasForeignKey(ap => ap.ServiceID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configuración de la relación Area - Unit
+            modelBuilder.Entity<Unit>()
+                .HasOne(u => u.Area)
+                .WithMany(a => a.Units)
+                .HasForeignKey(u => u.AreaID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación Comment -> Ticket

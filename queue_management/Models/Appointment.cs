@@ -13,14 +13,29 @@ namespace queue_management.Models
         [Display(Name = "Id de la Cita")]
         public int AppointmentID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo número de DUI es obligatorio")]
+        [Display(Name = "Número de DUI")]
+        [StringLength(11, MinimumLength = 5)]
+        public string? DUI { get; set; }
+
+        [Required(ErrorMessage = "El campo fecha de la Cita es obligatorio")]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha de la Cita")]
         public DateTime DateTime { get; set; }
 
+        [ForeignKey("ServiceId")]
+        public int ServiceID { get; set; }
+
+        [Display(Name = "Nombre del Servicio")]
+        public virtual Service? Service { get; set; }
+
         [Display(Name = "Observaciones de la Cita")]
         [StringLength(200, MinimumLength = 5)]
         public string? Observations { get; set; }
+
+        [ForeignKey("StatusId")]
+        public int StatusID { get; set; }
+        public virtual Status? Status { get; set; }
 
 
         // Definición de Relaciones & propiedad de navegacion
@@ -32,14 +47,6 @@ namespace queue_management.Models
         [ForeignKey("AgentId")]
         public int AgentId { get; set; }
         public virtual Agent? Agent { get; set; }
-
-        [ForeignKey("StatusId")]
-        public int StatusID { get; set; }
-        public virtual Status? Status { get; set; }
-
-        [ForeignKey("ServiceId")]
-        public int ServiceID { get; set; }
-        public virtual Service? Service { get; set; }
 
         [ForeignKey("LocationId")]
         public int LocationID { get; set; }

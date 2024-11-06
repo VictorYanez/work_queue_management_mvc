@@ -61,10 +61,11 @@ namespace queue_management.Controllers
         // GET: Locations/Create
         public IActionResult Create()
         {
-            ViewBag.CityID = new SelectList(_context.Cities, "CityID", "CityName");
+           
             ViewBag.CountryID = new SelectList(_context.Countries, "CountryID", "CountryName");
             ViewBag.DepartmentID = new SelectList(_context.Departments, "DepartmentID", "DepartmentName");
             ViewBag.RegionID = new SelectList(_context.Regions, "RegionID", "RegionName");
+            ViewBag.CityID = new SelectList(_context.Cities, "CityID", "CityName");
             return View();
         }
 
@@ -105,15 +106,24 @@ namespace queue_management.Controllers
                 return NotFound();
             }
 
-            var location = await _context.Locations.FindAsync(id);
+            var location = await _context.Locations
+                 .Include(l => l.City)
+                 .ThenInclude(x => x.Municipality)
+                 .ThenInclude(m => m.Region)
+                 .ThenInclude(r => r.Department)
+                 .ThenInclude(d => d.Country)
+                 .FirstOrDefaultAsync(m => m.LocationID == id);
+
             if (location == null)
             {
                 return NotFound();
             }
-            ViewBag.CityID = new SelectList(_context.Cities, "CityID", "CityName", location.CityID);
             ViewBag.CountryID = new SelectList(_context.Countries, "CountryID", "CountryName", location.CountryID);
-            ViewBag.DepartmentID = new SelectList(_context.Departments, "DepartmentID", "DepartmentName", location.DepartmentID);
-            ViewBag.RegionID = new SelectList(_context.Regions, "RegionID", "RegionName", location.RegionID);
+            ViewBag.DepartmentID = new SelectList(_context.Departments.Where(d => d.CountryID == location.CountryID), "DepartmentID", "DepartmentName", location.DepartmentID);
+            ViewBag.RegionID = new SelectList(_context.Regions.Where(r => r.DepartmentID == location.DepartmentID), "RegionID", "RegionName", location.RegionID);
+            ViewBag.MunicipalityID = new SelectList(_context.Municipalities.Where(m => m.RegionID == location.RegionID), "MunicipalityID", "MunicipalityName", location.MunicipalityID);
+            ViewBag.CityID = new SelectList(_context.Cities, "CityID", "CityName", location.CityID);
+
             return View(location);
         }
 
@@ -127,6 +137,12 @@ namespace queue_management.Controllers
                 return NotFound();
             }
 
+            // Remover propiedades de navegación del ModelState para evitar validación innecesaria
+            ModelState.Remove("Country");
+            ModelState.Remove("Department");
+            ModelState.Remove("Region");
+            ModelState.Remove("Municipality");
+            ModelState.Remove("City");
             if (ModelState.IsValid)
             {
                 try
@@ -147,14 +163,18 @@ namespace queue_management.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.CityID = new SelectList(_context.Cities, "CityID", "CityName", location.CityID);
+           
             ViewBag.CountryID = new SelectList(_context.Countries, "CountryID", "CountryName", location.CountryID);
             ViewBag.DepartmentID = new SelectList(_context.Departments, "DepartmentID", "DepartmentName", location.DepartmentID);
             ViewBag.RegionID = new SelectList(_context.Regions, "RegionID", "RegionName", location.RegionID);
+            ViewBag.MunicipalityID = new SelectList(_context.Municipalities.Where(m => m.RegionID == location.RegionID), "MunicipalityID", "MunicipalityName");
+            ViewBag.CityID = new SelectList(_context.Cities, "CityID", "CityName", location.CityID);
+            
             return View(location);
         }
 
-        // GET: Locations/Delete/5
+        // GET: Locations/Delete
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -164,10 +184,12 @@ namespace queue_management.Controllers
 
             var location = await _context.Locations
                 .Include(l => l.City)
-                .Include(l => l.Country)
-                .Include(l => l.Department)
-                .Include(l => l.Region)
+                .ThenInclude(x => x.Municipality)
+                .ThenInclude(m => m.Region)
+                .ThenInclude(r => r.Department)
+                .ThenInclude(d => d.Country)
                 .FirstOrDefaultAsync(m => m.LocationID == id);
+
             if (location == null)
             {
                 return NotFound();
@@ -181,7 +203,14 @@ namespace queue_management.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var location = await _context.Locations.FindAsync(id);
+            var location = await _context.Locations
+                 .Include(l => l.City)
+                 .ThenInclude(x => x.Municipality)
+                 .ThenInclude(m => m.Region)
+                 .ThenInclude(r => r.Department)
+                 .ThenInclude(d => d.Country)
+                 .FirstOrDefaultAsync(m => m.LocationID == id);
+
             if (location != null)
             {
                 _context.Locations.Remove(location);

@@ -22,8 +22,7 @@ namespace queue_management.Controllers
         // GET: Municipalities
         public async Task<IActionResult> Index()
         {
-            var applicationDBContext = _context.Municipalities.
-                Include(m => m.Country).Include(m => m.Department).Include(m => m.Region);
+            var applicationDBContext = _context.Municipalities.Include(m => m.Country).Include(m => m.Department).Include(m => m.Region);
             return View(await applicationDBContext.ToListAsync());
         }
 
